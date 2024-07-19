@@ -1,6 +1,6 @@
 <template>
-    <div ref="videoContainer" style="width: 100%; height: 100%;" v-if="video">
-        <video ref="videoPlayer" :src="video" style="width: 100%; height: 100%;"></video>
+    <div ref="videoContainer" style="width: 100%; height: 100%;">
+        <video ref="videoPlayer" :src="video" controls style="width: 100%; height: 100%;"></video>
     </div>
 </template>
 
@@ -18,7 +18,6 @@ const start = (url) => {
     const player = videoPlayer.value;
 
     player.load();
-    player.currentTime = 0;
     player.onloadedmetadata = () => {
         if (player.requestFullscreen) {
             player.requestFullscreen();
