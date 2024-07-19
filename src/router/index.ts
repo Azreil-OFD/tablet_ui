@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import MenuView from '../views/MenuView.vue'
+import MenuView from '@/views/MenuView.vue'
 import LoginView from '@/views/LoginView.vue'
 import ViewPage from '@/views/ViewPage.vue'
 

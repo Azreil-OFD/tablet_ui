@@ -24,7 +24,7 @@
 
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { useKeyStore } from '@/stores/useVideoStore';
 import { StandAPI } from '@/utils/video';
 import { ref, watch } from 'vue'

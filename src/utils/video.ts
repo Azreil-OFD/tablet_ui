@@ -55,7 +55,6 @@ export class StandAPI {
             data: null
           }
         }
-      } else {
       }
     } catch (error) {
       return {
