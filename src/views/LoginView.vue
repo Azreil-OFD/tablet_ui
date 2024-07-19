@@ -5,7 +5,7 @@
         <div class="relative">
             <input type="text" id="key"
                 class="block w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                placeholder="XXX-XXX" required v-model="key" min="7" />
+                placeholder="XXX-XXX-XX" required v-model="key" min="10" />
             <button @click="activate"
                 class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Activate</button>
         </div>
@@ -25,6 +25,8 @@
 </template>
 
 <script setup lang="ts">
+import { useKeyStore } from '@/stores/useVideoStore';
+import { StandAPI } from '@/utils/video';
 import { ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -45,14 +47,25 @@ watch(key, (newVal, oldVal) => {
         key.value = key.value.slice(0, 3)
         addAsp.value = true;
         return
-    } else
-        if (key.value.length === 3) {
-            addAsp.value = true;
-            key.value += '-'
-        } else if (key.value.length === 8) {
-            addAsp.value = true;
-            key.value = oldVal;
-        }
+    } else if (newVal.length > 8 && newVal[7] !== '-') {
+        key.value = key.value.slice(0, 7) + '-' + key.value.slice(7, key.value.length)
+        addAsp.value = true;
+        return
+    } else if (oldVal.length === 9 && newVal.length === 8) {
+        key.value = key.value.slice(0, 7)
+        addAsp.value = true;
+        return
+    } else if (key.value.length === 3 || key.value.length === 7) {
+        addAsp.value = true;
+        key.value += '-'
+    } else if (key.value.length === 11) {
+        addAsp.value = true;
+        key.value = oldVal;
+    }
+    if (key.value.length > 10) {
+        addAsp.value = true;
+        key.value = key.value.slice(0, 10)
+    }
     if (/[a-zа-я]/.test(key.value)) {
         key.value = key.value.toLocaleUpperCase()
         addAsp.value = true
@@ -60,8 +73,10 @@ watch(key, (newVal, oldVal) => {
     }
 })
 
-const activate = () => {
-    if (key.value === "HHH-HHH") {
+const activate = async () => {
+    const keyStorage = useKeyStore();
+    keyStorage.setKey(key.value)
+    if (await keyStorage.activated) {
         router.push('/menu')
     } else {
         error.value = "Невалидный ключ активации!"
