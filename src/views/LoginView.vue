@@ -77,7 +77,7 @@ const activate = async () => {
     const keyStorage = useKeyStore();
     keyStorage.setKey(key.value)
     if (await keyStorage.activated) {
-        router.push('/menu')
+        router.push('/target')
     } else {
         error.value = "Невалидный ключ активации!"
     }
